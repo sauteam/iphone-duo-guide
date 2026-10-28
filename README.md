@@ -1,5 +1,6 @@
 # iPhone Duo (Foldable) Design & Engineering Guide
-### 📱 iPhone Duo 折叠屏设计与研发自适应适配权威指南
+
+### 📱 iPhone Duo 折叠屏设计与研发适配
 
 [![Platform](https://img.shields.io/badge/Platform-iOS%2027.0%2B-blue.svg)](https://developer.apple.com)
 [![Device](https://img.shields.io/badge/Device-iPhone%20Duo%20(iPhone19%2C4)-orange.svg)](https://www.apple.com)
@@ -56,13 +57,13 @@ iPhone Duo 是 Apple 推出的具有划时代意义的双屏折叠设备。许�
 
 iPhone Duo 内屏展开后的物理尺寸为 $164.6 \times 117.8\text{ mm}$，宽明显大于高，其**自然手持态为横屏 (Landscape)**。
 
-| 设备形态 | 屏幕方向 | 物理像素 (px) | 渲染逻辑点 (pt) | 比例 (Aspect Ratio) | 尺寸类 (Size Class) | 缩放因子 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **折叠外屏 (Closed)** | 竖屏 (Portrait) | $1398 \times 2034$ | **$466 \times 678$** | $\approx 1.45 : 1$ | Compact $\times$ Regular | 3.0x |
-| **折叠外屏 (Closed)** | 横屏 (Landscape) | $2034 \times 1398$ | **$678 \times 466$** | $\approx 1.45 : 1$ | Compact $\times$ Compact | 3.0x |
-| **展开内屏 (Open Flat)** | **横屏 (Landscape 自然态)** | $2670 \times 1878$ | **$951 \times 669$** | $\approx 1.42 : 1$ | **Regular $\times$ Regular** | 3.0x (Downsampled) |
-| **展开内屏 (Open Flat)** | 竖屏 (Portrait) | $1878 \times 2670$ | **$669 \times 951$** | $\approx 1.42 : 1$ | Regular $\times$ Regular | 3.0x (Downsampled) |
-| **展开内屏单侧 (Single Half)** | 横屏下的单侧窗口 | $\approx 1335 \times 1878$ | **$475.5 \times 669$** | $\approx 1.41 : 1$ | 相当于标准 iPhone | 3.0x |
+| 设备形态                       | 屏幕方向                    | 物理像素 (px)              | 渲染逻辑点 (pt)        | 比例 (Aspect Ratio) | 尺寸类 (Size Class)          | 缩放因子           |
+|:------------------------------ |:--------------------------- |:-------------------------- |:---------------------- |:------------------- |:---------------------------- |:------------------ |
+| **折叠外屏 (Closed)**          | 竖屏 (Portrait)             | $1398 \times 2034$         | **$466 \times 678$**   | $\approx 1.45 : 1$  | Compact $\times$ Regular     | 3.0x               |
+| **折叠外屏 (Closed)**          | 横屏 (Landscape)            | $2034 \times 1398$         | **$678 \times 466$**   | $\approx 1.45 : 1$  | Compact $\times$ Compact     | 3.0x               |
+| **展开内屏 (Open Flat)**       | **横屏 (Landscape 自然态)** | $2670 \times 1878$         | **$951 \times 669$**   | $\approx 1.42 : 1$  | **Regular $\times$ Regular** | 3.0x (Downsampled) |
+| **展开内屏 (Open Flat)**       | 竖屏 (Portrait)             | $1878 \times 2670$         | **$669 \times 951$**   | $\approx 1.42 : 1$  | Regular $\times$ Regular     | 3.0x (Downsampled) |
+| **展开内屏单侧 (Single Half)** | 横屏下的单侧窗口            | $\approx 1335 \times 1878$ | **$475.5 \times 669$** | $\approx 1.41 : 1$  | 相当于标准 iPhone            | 3.0x               |
 
 > [!NOTE]
 > **黄金可用宽度 $375.5\text{ pt}$**：
@@ -355,14 +356,14 @@ open class DuoDualPaneBaseController: UIViewController {
 
 在设计评审或代码 PR 提交前，请逐项核对：
 
-| 序号 | 检验维度 | 关键检查点 | 合格判定标准 |
-| :---: | :--- | :--- | :--- |
-| **1** | **物理折痕避让** | $x = 475.5\text{ pt} \pm 16\text{ pt}$ 区域排查 | 没有任何离散按钮、文字、滑块或核心图标跨越中缝 |
-| **2** | **84pt 垂直导航避让** | 右侧外边缘布局约束 | 约束绑定 `safeAreaLayoutGuide.trailing`，右边缘无内容被遮盖 |
-| **3** | **控件抗拉伸控制** | 展开横屏下按钮与卡片尺寸 | 单个操作按钮宽度控制在 320~440pt 之间，杜绝 900pt 机械扁担 |
-| **4** | **商业化合规闭环** | Paywall 界面价格、购买点与协议 | 价格、订阅周期、购买按钮和法律条款完整收纳在单侧窗格 |
-| **5** | **外屏平滑降级** | 设备折叠闭合状态 ($466 \times 678\text{pt}$) | 界面平滑回退为标准单列流布局，无元素重叠或截断 |
-| **6** | **折叠与旋转保活** | 在模拟器中切换姿态 (`Cmd + [` / `Cmd + ]`) | 音视频播放进度、表单输入中内容、滚动偏移行平滑保留 |
+| 序号  | 检验维度              | 关键检查点                                      | 合格判定标准                                                |
+|:-----:|:--------------------- |:----------------------------------------------- |:----------------------------------------------------------- |
+| **1** | **物理折痕避让**      | $x = 475.5\text{ pt} \pm 16\text{ pt}$ 区域排查 | 没有任何离散按钮、文字、滑块或核心图标跨越中缝              |
+| **2** | **84pt 垂直导航避让** | 右侧外边缘布局约束                              | 约束绑定 `safeAreaLayoutGuide.trailing`，右边缘无内容被遮盖 |
+| **3** | **控件抗拉伸控制**    | 展开横屏下按钮与卡片尺寸                        | 单个操作按钮宽度控制在 320~440pt 之间，杜绝 900pt 机械扁担  |
+| **4** | **商业化合规闭环**    | Paywall 界面价格、购买点与协议                  | 价格、订阅周期、购买按钮和法律条款完整收纳在单侧窗格        |
+| **5** | **外屏平滑降级**      | 设备折叠闭合状态 ($466 \times 678\text{pt}$)    | 界面平滑回退为标准单列流布局，无元素重叠或截断              |
+| **6** | **折叠与旋转保活**    | 在模拟器中切换姿态 (`Cmd + [` / `Cmd + ]`)      | 音视频播放进度、表单输入中内容、滚动偏移行平滑保留          |
 
 ---
 
@@ -386,7 +387,7 @@ open class DuoDualPaneBaseController: UIViewController {
 
 欢迎提交 Issue 和 Pull Request 一同完善 iPhone Duo 折叠屏设计与开发生态！
 
-1. Fork 本仓库并新建分支：`feature/duo-adaptive-enhancement`；
+1. Fork 本仓库并新建分支
 2. 保持代码注释规范并遵循 Apple HIG；
 3. 提交 PR 并附带 Xcode 27+ 模拟器双屏录屏效果。
 
